@@ -41,7 +41,21 @@ extrair_html <- function(x) {
     html_text() %>% 
     str_split("\r\r\n") %>% 
     unlist() %>% 
-    paste(collapse = " ")
+    paste(collapse = " ") %>% 
+    str_squish()
+  return(t)
+  
+}
+
+extrair_html2 <- function(x) {
+  
+  t <- read_html(x) %>% 
+    html_nodes("div.conteudo") %>% 
+    html_text() %>% 
+    str_split("\r\r\n") %>% 
+    unlist() %>% 
+    paste(collapse = " ") %>% 
+    str_squish()
   return(t)
   
 }
