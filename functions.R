@@ -1,3 +1,16 @@
+download_ata <- function(n_ata = 200) {
+  url = paste0("http://www.bcb.gov.br/?COPOM", n_ata)
+  if (n_ata < 200) {
+    destfile = paste0("./atas/copom_", n_ata, ".htm")
+  } else {
+    destfile = paste0("./atas/copom_", n_ata, ".pdf")
+  }
+  download.file(url = url,
+                destfile = destfile,
+                mode = "wb",
+                extra = '-L')
+}
+
 pontuar_html <- function(x) {
   
   z <- read_html(x) %>% 
@@ -30,7 +43,9 @@ pontuar_pdf <- function(x) {
 extrair_pdf <- function(x) {
   b <- pdf_text(x) %>% 
     str_split("\r\n") %>% 
-    unlist() 
+    unlist() %>% 
+    paste(collapse = " ") %>% 
+    str_squish()
   return(b)
 }
 
@@ -60,11 +75,26 @@ extrair_html2 <- function(x) {
   
 }
 
+extrair_txt <- function(x) {
+  y <- as.integer(str_sub(x, 14, -5))
+    if (y < 97) {
+    return(extrair_html2(x))
+  } else {
+    if (y < 200) {
+      return(extrair_html(x))
+    } else {
+      return(extrair_pdf(x))
+    }
+  }
+}
+
 datar_html <- function(x) {
   z <- read_html(x) %>% 
     html_nodes("meta") %>% 
     html_attr("content") %>%
-    .[5]
+    .[5] %>% 
+    dmy() %>% 
+    as.character()
   
   return(z)
 }
@@ -72,8 +102,19 @@ datar_html <- function(x) {
 datar_pdf <- function(x) {
   z <- pdf_info(x) %>% 
     .$modified %>% 
-    str_sub(1, 10)
+    str_sub(1, 10) %>% 
+    ymd() %>% 
+    as.character()
   return(z)
+}
+
+extrair_data <- function(x) {
+  y <- as.integer(str_sub(x, 14, -5))
+  if (y < 200) {
+      return(datar_html(x))
+    } else {
+      return(datar_pdf(x))
+    }
 }
 
 pontuar_lista <- function(x) {
@@ -93,27 +134,3 @@ pontuar_texto <- function(x) {
     sum()
   return(p)
 }
-
-# Criando a base de dados -----------------------------------------------------
-
-atas_html <- list.files("./atas/", "html") %>% 
-  as_tibble() %>% 
-  mutate(path = paste0("./atas/",value)) %>% 
-  mutate(ata = str_sub(value, 6, -6)) %>% 
-  mutate(ata = as.integer(ata)) %>% 
-  mutate(data = map(path, datar_html)) %>% 
-  mutate(data = dmy(data)) %>% 
-  mutate(texto = map(path, extrair_html)) %>% 
-  select(-path, -value)
-
-atas_pdf <- list.files("./atas/", "pdf") %>% 
-  as_tibble() %>% 
-  mutate(path = paste0("./atas/",value)) %>% 
-  mutate(ata = str_sub(path, -7, -5)) %>% 
-  mutate(ata = as.integer(ata)) %>% 
-  mutate(data = map(path, datar_pdf)) %>% 
-  mutate(data = ymd(data)) %>% 
-  mutate(texto = map(path, extrair_pdf)) %>% 
-  select(-path, -value)
-
-atas_html %>% full_join(atas_pdf)
