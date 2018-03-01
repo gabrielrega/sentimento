@@ -1,3 +1,3 @@
-Autor: Gabriel Rega
-Site: www.gabrielrega.com
-Licença: MIT
+* Autor: Gabriel Rega
+* Site: www.gabrielrega.com
+* Licença: MIT
