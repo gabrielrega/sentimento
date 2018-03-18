@@ -1,5 +1,10 @@
 # Criando a base de dados -----------------------------------------------------
 
+library(tidyverse)
+library(stringr)
+library(pdftools)
+library(rvest)
+
 atas <- list.files("./atas/") %>% 
   as_tibble() %>% 
   mutate(path = paste0("./atas/",value)) %>% 
@@ -12,3 +17,7 @@ atas <- list.files("./atas/") %>%
   select(-path, -value)
 
 write.table(atas %>% unnest(), "atas.txt", sep = '\t', row.names = FALSE)
+
+# abaixo não funciona ainda:
+# jsonlite::write_json(atas,"atas.json", simplifyVector = TRUE)
+# atas2 <- jsonlite::read_json("atas.json")
