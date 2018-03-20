@@ -1,3 +1,7 @@
+library(tidyverse)
+library(tidytext)
+library(lexiconPT)
+
 pontuar_texto <- function(x) {
   p <- x %>%
     as_tibble() %>% 
@@ -8,7 +12,7 @@ pontuar_texto <- function(x) {
   return(p)
 }
 
-pts <- rec %>% 
+pts <- atas %>% 
   mutate(pontos = map(texto, pontuar_texto)) %>% 
   unnest(pontos)
   
