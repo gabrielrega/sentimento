@@ -18,6 +18,7 @@ atas <- list.files("./atas/") %>%
 
 write.table(atas %>% unnest(), "atas.txt", sep = '\t', row.names = FALSE)
 
-# abaixo não funciona ainda:
-# jsonlite::write_json(atas,"atas.json", simplifyVector = TRUE)
-# atas2 <- jsonlite::read_json("atas.json")
+options(encoding = "utf8")
+jsonlite::write_json(atas,"atas.json")
+atas2 <- jsonlite::read_json("atas.json", flatten = TRUE, simplifyVector = TRUE) %>% as_tibble()
+atas2
