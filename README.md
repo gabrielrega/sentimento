@@ -9,3 +9,4 @@ Meste projeto eu tento de forma didática e reprodutível fazer a análise de se
 * builder.R: Utiliza as funções do arquivos functions e os arquivos baixados com o downloader para construir uma tabela com os números das atas, datas de publicação e textos completos e salvar em um arquivo no formato texto.
 * leitor.R: Comandos para, tendo baixado o arquivo atas.txt criado pelo builder, reconstruir a tabela no R para ser utilizada nas análises.
 * sentimento.R: Análise simples de sentimento.
+* graph.R: Cria um gráfico histórico de linhas com a análise de sentimento da base de dados. Precisa ter usado o leitor primeiro.
