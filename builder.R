@@ -16,9 +16,10 @@ atas <- list.files("./atas/") %>%
   arrange(data) %>% 
   select(-path, -value)
 
-write.table(atas %>% unnest(), "atas.txt", sep = '\t', row.names = FALSE)
+dir.create("/database/")
+write.table(atas %>% unnest(), "./database/atas.txt", sep = '\t', row.names = FALSE)
 
 options(encoding = "utf8")
-jsonlite::write_json(atas,"atas.json")
-atas2 <- jsonlite::read_json("atas.json", flatten = TRUE, simplifyVector = TRUE) %>% as_tibble()
+jsonlite::write_json(atas,"./database/atas.json")
+atas2 <- jsonlite::read_json("./database/atas.json", flatten = TRUE, simplifyVector = TRUE) %>% as_tibble()
 atas2
